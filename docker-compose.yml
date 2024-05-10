@@ -1,0 +1,21 @@
+services:
+  ftp-server:
+    container_name: ftp_container
+    environment:
+      - FTP_PASS=${FTP_PASS}
+      - FTP_USER=${FTP_USER}
+    image: garethflowers/ftp-server
+    ports:
+      - "20-21:20-21/tcp"
+      - "40000-40009:40000-40009/tcp"
+    volumes:
+      - "./data:/home/${FTP_USER}"
+  nginx:
+    image: nginx:alpine
+    container_name: ftp_webserver
+    restart: unless-stopped
+    ports:
+      - "${WEBSERVER_PORT}:80"
+    volumes:
+      - "./data:/var/www"
+      - "./nginx:/etc/nginx/conf.d/"
